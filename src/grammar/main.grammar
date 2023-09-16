@@ -1,0 +1,109 @@
+//!element
+
+@top Tree { expr }
+
+@precedence {
+  call @left,
+  mul @left,
+  add @left,
+  logic @left,
+  arrow @right,
+  def @left,
+  lines @left
+}
+
+expr {
+    nonLine
+  | line
+  | Lines { line !lines expr }
+  | "(" expr ")"
+}
+
+nonLine {
+    Identifier
+  | String
+  | Number
+  | CaptureExpr { Dollar Identifier }
+  | CallExpr { nonLine !call expr }
+  | BinExpr {
+      expr !mul(Mul | Div) expr
+    | expr !add(Add | Sub | Join) expr
+    | expr !logic(Or | And) expr
+    | expr !def(Def) expr
+  }
+  | ArrowExpr {
+    expr !arrow(Arrow) expr
+  }
+}
+
+line {
+    expr newline
+  | CallExpr { expr !call block }
+  | BinExpr {
+      expr !mul(Mul | Div) block
+    | expr !add(Add | Sub | Join) block
+    | expr !logic(Or | And) block
+    | expr !def(Def) block
+  }
+  | ArrowExpr {
+    expr !arrow(Arrow) block
+  }
+}
+
+block {
+  newline indent blockable (dedent | eof)
+}
+
+blockable {
+    expr newline
+  | LogicBlock {
+      LogicLine { !logic (Or | And) expr (newline | eof)? }+
+  }
+}
+
+//!skip
+
+@skip {
+  spaces |
+  Comment |
+  blankLineStart (spaces | Comment)* lineEnd
+}
+
+//!lineEnd
+
+lineEnd { newline | eof }
+
+//!context
+
+@context trackIndent from "./tokens.js"
+
+//!externalTokens
+
+@external tokens indentation from "./tokens.js" {
+  indent
+  dedent
+  blankLineStart
+}
+
+//!tokens
+@tokens {
+  spaces { $[ \t]+ }
+  newline { "\n" }
+  eof { @eof }
+  Comment { "//" ![\n]+ }
+  Identifier { $[a-zA-Z_] $[a-zA-Z_0-9]+ }
+  String { '"' !["]* '"' }
+  Number { $[0-9]+ ("." $[0-9]+)? }
+  Add { "+" }
+  Sub { "-" }
+  Mul { "*" }
+  Div { "/" ![/] }
+  Or { "|" }
+  And { "&" }
+  Join { "\\" }
+  Def { ":" }
+  Dollar { "$" }
+  Arrow { "->" }
+}
+
+@external propSource highlight from "./highlight.js"
