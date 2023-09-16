@@ -75,11 +75,11 @@ lineEnd { newline | eof }
 
 //!context
 
-@context trackIndent from "./tokens.js"
+@context trackIndent from "$tokens"
 
 //!externalTokens
 
-@external tokens indentation from "./tokens.js" {
+@external tokens indentation from "$tokens" {
   indent
   dedent
   blankLineStart
@@ -106,4 +106,4 @@ lineEnd { newline | eof }
   Arrow { "->" }
 }
 
-@external propSource highlight from "./highlight.js"
+@external propSource highlight from "$highlight"

@@ -1,0 +1,15 @@
+{
+    "imports": {
+        "@lezer/lr": "npm:@lezer/lr",
+        "@lezer/highlight": "npm:@lezer/highlight",
+        "@codemirror/language": "npm:@codemirror/language",
+
+        "$tokens": "./src/grammar/tokens.js",
+        "$highlight": "./src/grammar/highlight.js",
+        "$terms": "./dist/main.terms.ts"
+    },
+
+    "tasks": {
+        "build": "deno run --allow-read --allow-write npm:@lezer/generator --typeScript src/grammar/main.grammar -o dist/main.ts"
+    }
+}
