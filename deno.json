@@ -7,13 +7,13 @@
 
         "$tokens": "./src/grammar/tokens.js",
         "$highlight": "./src/grammar/highlight.js",
-        "$terms": "./dist/main.terms.ts",
-        "$parser": "./dist/main.ts",
+        "$terms": "./src/grammar/dist/main.terms.ts",
+        "$parser": "./src/grammar/dist/main.ts",
 
         "$zy": "https://deno.land/x/zylang@0.2.6-3/mod.ts"
     },
 
     "tasks": {
-        "build": "deno run --allow-read --allow-write npm:@lezer/generator --typeScript src/grammar/main.grammar -o dist/main.ts"
+        "build": "deno run --allow-read --allow-write npm:@lezer/generator --typeScript src/grammar/main.grammar -o src/grammar/dist/main.ts"
     }
 }
